@@ -10,7 +10,9 @@ No worries, it'll tell you exactly how much of what you need to use in order to 
 ### The formula
 
 It makes use of the following formula, all variables in grams:
-`((targetProteinContent - glutenProteinContent) / (flourProteinContent - glutenProteinContent)) * targetFlourWeight`
+```text
+((targetProteinContent - glutenProteinContent) / (flourProteinContent - glutenProteinContent)) * targetFlourWeight
+```
 
 For example:
 `((13.5 - 78) / (10.0-78)) * 600`
