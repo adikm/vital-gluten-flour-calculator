@@ -3,31 +3,46 @@ package main
 import (
 	"flag"
 	"fmt"
+	"math"
 	"strings"
 )
 
+type input struct {
+	flourProteinContent,
+	glutenProteinContent,
+	targetProteinContent,
+	targetFlourWeight float64
+}
+
 func main() {
-	var flourProteinContent float64
-	var glutenProteinContent float64
-	var targetProteinContent float64
-	var targetFlourWeight float64
-	flag.Float64Var(&flourProteinContent, "flourProteinContent", 0.0, "your flour protein content, per 100g. For example: 10.3")
-	flag.Float64Var(&glutenProteinContent, "glutenProteinContent", 0.0, "your gluten protein content, per 100g. For example: 78.5")
-	flag.Float64Var(&targetProteinContent, "targetProteinContent", 0.0, "wanted flour protein content, per 100g. For example: 13.5")
-	flag.Float64Var(&targetFlourWeight, "targetFlourWeight", 0.0, "target flour weight, for which needed amount of vital wheat gluten will be calculated, for example 600")
+	var i input
+	flag.Float64Var(&i.flourProteinContent, "flourProteinContent", 0.0, "your expectedFlour protein content, per 100g. For example: 10.3")
+	flag.Float64Var(&i.glutenProteinContent, "glutenProteinContent", 0.0, "your expectedGluten protein content, per 100g. For example: 78.5")
+	flag.Float64Var(&i.targetProteinContent, "targetProteinContent", 0.0, "wanted expectedFlour protein content, per 100g. For example: 13.5")
+	flag.Float64Var(&i.targetFlourWeight, "targetFlourWeight", 0.0, "target expectedFlour weight, for which needed amount of vital wheat expectedGluten will be calculated, for example 600")
 	flag.Parse()
 
-	msgs := verifyInput(flourProteinContent, glutenProteinContent, targetProteinContent, targetFlourWeight)
-
+	msgs := verifyInput(i.flourProteinContent, i.glutenProteinContent, i.targetProteinContent, i.targetFlourWeight)
 	if len(msgs) > 0 {
 		panic(strings.Join(msgs, " "))
 	}
-	//([Target protein content usersFlourPercentage] - [All-purpose flour protein content usersFlourPercentage]) x [Total flour weight] = [Amount of vital wheat gluten to substitute for all-purpose flour]
-	usersFlourPercentage := (targetProteinContent - glutenProteinContent) / (flourProteinContent - glutenProteinContent)
-	usersFlourGrams := targetFlourWeight * usersFlourPercentage
 
-	fmt.Printf("You need to use %.0fg of your flour\n", usersFlourGrams)
-	fmt.Printf("and %.0fg of vital gluten\n", targetFlourWeight-usersFlourGrams)
+	flour, gluten := countFlourGlutenRatio(i)
+
+	fmt.Printf("You need to use %.0fg of your expectedFlour\n", flour)
+	fmt.Printf("and %.0fg of vital expectedGluten\n", gluten)
+}
+
+// countFlourGlutenRatio calculates needed expectedFlour and vital wheat expectedGluten in order to achieve desired protein content in the mix
+// it uses the following formula. All values are in grams.:
+// ((targetProteinContent - glutenProteinContent) / (flourProteinContent - glutenProteinContent)) * targetFlourWeight
+// for example: ((13.5 - 78) / (10.0-78)) * 600
+// the result is 569g of expectedFlour and 31g of vital wheat expectedGluten
+func countFlourGlutenRatio(i input) (float64, float64) {
+	flourPercentage := (i.targetProteinContent - i.glutenProteinContent) / (i.flourProteinContent - i.glutenProteinContent)
+	flourWeight := i.targetFlourWeight * flourPercentage
+	glutenWeight := i.targetFlourWeight - flourWeight
+	return math.Round(flourWeight), math.Round(glutenWeight)
 }
 
 // verifyInput checks all cmd flags and returns errorMessages if validation failed
@@ -43,7 +58,7 @@ func verifyInput(flourProteinContent, glutenProteinContent, targetProteinContent
 	if targetProteinContent == 0.0 {
 		msgs = append(msgs, "'targetProteinContent' flag not specified.")
 	} else if flourProteinContent != 0.0 && targetProteinContent < flourProteinContent {
-		msgs = append(msgs, "'targetProteinContent' must be bigger than your flour protein content.")
+		msgs = append(msgs, "'targetProteinContent' must be bigger than your expectedFlour protein content.")
 	}
 
 	if glutenProteinContent == 0.0 {
