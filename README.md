@@ -16,7 +16,7 @@ It makes use of the following formula, all variables in grams:
 
 For example:
 `((13.5 - 78) / (10.0-78)) * 600`
-gives you a mix ~569g of flour and ~31g of vital wheat gluten that you need to mix together, so you get a mix of 13.5%
+gives you a mix ~569g of flour and ~31g of vital wheat gluten that you need to mix together, so you get a mixture of 13.5%
 protein content
 
 ### Usage
@@ -30,6 +30,6 @@ go run . -flourProteinContent 10 -glutenProteinContent 78 -targetProteinContent 
 You should get the result similar to this:
 
 ```text
-In order to reach the desired protein content of 14% in total weight of dry-matter 600g
+In order to reach the desired protein content of 14% in total weight of mixture 600g
 you need to mix 569g of flour and 31g of vital wheat gluten
 ```

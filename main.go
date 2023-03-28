@@ -29,7 +29,7 @@ func main() {
 
 	flour, gluten := countFlourGlutenRatio(i)
 
-	fmt.Printf("In order to reach the desired protein content of %.0f%% in total weight of dry-matter %.0fg\n", i.targetProteinContent, i.targetFlourWeight)
+	fmt.Printf("In order to reach the desired protein content of %.0f%% in total weight of mixture %.0fg\n", i.targetProteinContent, i.targetFlourWeight)
 	fmt.Printf("you need to mix %.0fg of flour and %.0fg of vital wheat gluten\n", flour, gluten)
 }
 
