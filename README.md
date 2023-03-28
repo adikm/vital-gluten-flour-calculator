@@ -1,4 +1,4 @@
-# vital-gluten-floru-calculator [![Test](https://github.com/adikm/vital-gluten-floru-calculator/actions/workflows/test.yml/badge.svg)](https://github.com/adikm/vital-gluten-floru-calculator/actions/workflows/test.yml)
+# vital-gluten-flour-calculator [![Test](https://github.com/adikm/vital-gluten-flour-calculator/actions/workflows/test.yml/badge.svg)](https://github.com/adikm/vital-gluten-flour-calculator/actions/workflows/test.yml)
 
 Vital Wheat Gluten Flour Calculator
 
