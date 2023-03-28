@@ -16,10 +16,10 @@ type input struct {
 
 func main() {
 	var i input
-	flag.Float64Var(&i.flourProteinContent, "flourProteinContent", 0.0, "your expectedFlour protein content, per 100g. For example: 10.3")
-	flag.Float64Var(&i.glutenProteinContent, "glutenProteinContent", 0.0, "your expectedGluten protein content, per 100g. For example: 78.5")
-	flag.Float64Var(&i.targetProteinContent, "targetProteinContent", 0.0, "wanted expectedFlour protein content, per 100g. For example: 13.5")
-	flag.Float64Var(&i.targetFlourWeight, "targetFlourWeight", 0.0, "target expectedFlour weight, for which needed amount of vital wheat expectedGluten will be calculated, for example 600")
+	flag.Float64Var(&i.flourProteinContent, "flourProteinContent", 0.0, "your flour protein content, per 100g. For example: 10.3")
+	flag.Float64Var(&i.glutenProteinContent, "glutenProteinContent", 0.0, "your gluten protein content, per 100g. For example: 78.5")
+	flag.Float64Var(&i.targetProteinContent, "targetProteinContent", 0.0, "wanted flour protein content, per 100g. For example: 13.5")
+	flag.Float64Var(&i.targetFlourWeight, "targetFlourWeight", 0.0, "target flour weight, for which needed amount of vital wheat gluten will be calculated, for example 600")
 	flag.Parse()
 
 	msgs := verifyInput(i.flourProteinContent, i.glutenProteinContent, i.targetProteinContent, i.targetFlourWeight)
@@ -29,15 +29,15 @@ func main() {
 
 	flour, gluten := countFlourGlutenRatio(i)
 
-	fmt.Printf("You need to use %.0fg of your flour\n", flour)
-	fmt.Printf("and %.0fg of vital wheat gluten\n", gluten)
+	fmt.Printf("In order to reach the desired protein content of %.0f%% in total weight of dry-matter %.0fg\n", i.targetProteinContent, i.targetFlourWeight)
+	fmt.Printf("you need to mix %.0fg of flour and %.0fg of vital wheat gluten\n", flour, gluten)
 }
 
-// countFlourGlutenRatio calculates needed expectedFlour and vital wheat expectedGluten in order to achieve desired protein content in the mix
+// countFlourGlutenRatio calculates needed flour and vital wheat gluten in order to achieve desired protein content in the mix
 // it uses the following formula. All values are in grams.:
 // ((targetProteinContent - glutenProteinContent) / (flourProteinContent - glutenProteinContent)) * targetFlourWeight
 // for example: ((13.5 - 78) / (10.0-78)) * 600
-// the result is 569g of expectedFlour and 31g of vital wheat expectedGluten
+// the result is 569g of flour and 31g of vital wheat gluten
 func countFlourGlutenRatio(i input) (float64, float64) {
 	flourPercentage := (i.targetProteinContent - i.glutenProteinContent) / (i.flourProteinContent - i.glutenProteinContent)
 	flourWeight := i.targetFlourWeight * flourPercentage
