@@ -57,17 +57,31 @@ func Test_verifyInput(t *testing.T) {
 		args input
 		want []string
 	}{
-		{name: "all fields empty",
-			args: input{},
+		{name: "all fields = 0",
+			args: input{0, 0, 0, 0},
 			want: []string{"'flourProteinContent' flag not specified.", "'targetProteinContent' flag not specified.",
 				"'glutenProteinContent' flag not specified.", "'targetFlourWeight' flag not specified.",
 				"Check --help for details"},
+		},
+		{name: "all fields < 0",
+			args: input{-1, -1, -1, -1},
+			want: []string{"'flourProteinContent' can't be less than 0.", "'targetProteinContent' can't be less than 0.",
+				"'glutenProteinContent' can't be less than 0.", "'targetFlourWeight' can't be less than 0.",
+				"Check --help for details"},
+		},
+		{name: "targetProteinContent < flourProteinContent",
+			args: input{10.5, 78, 10.0, 600},
+			want: []string{"'targetProteinContent' must be bigger than your flour protein content.", "Check --help for details"},
+		},
+		{name: "all fields are correct",
+			args: input{10.5, 80, 13.2, 600},
+			want: nil,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := verifyInput(tt.args.flourProteinContent, tt.args.glutenProteinContent, tt.args.targetProteinContent, tt.args.targetFlourWeight); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("verifyInput() = %v, expectedMsgs %v", got, tt.want)
+				t.Errorf("verifyInput() = %v, expectedMsgs = %v", got, tt.want)
 			}
 		})
 	}

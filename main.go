@@ -29,8 +29,8 @@ func main() {
 
 	flour, gluten := countFlourGlutenRatio(i)
 
-	fmt.Printf("You need to use %.0fg of your expectedFlour\n", flour)
-	fmt.Printf("and %.0fg of vital expectedGluten\n", gluten)
+	fmt.Printf("You need to use %.0fg of your flour\n", flour)
+	fmt.Printf("and %.0fg of vital wheat gluten\n", gluten)
 }
 
 // countFlourGlutenRatio calculates needed expectedFlour and vital wheat expectedGluten in order to achieve desired protein content in the mix
@@ -57,8 +57,10 @@ func verifyInput(flourProteinContent, glutenProteinContent, targetProteinContent
 
 	if targetProteinContent == 0.0 {
 		msgs = append(msgs, "'targetProteinContent' flag not specified.")
+	} else if targetProteinContent < 0.0 {
+		msgs = append(msgs, "'targetProteinContent' can't be less than 0.")
 	} else if flourProteinContent != 0.0 && targetProteinContent < flourProteinContent {
-		msgs = append(msgs, "'targetProteinContent' must be bigger than your expectedFlour protein content.")
+		msgs = append(msgs, "'targetProteinContent' must be bigger than your flour protein content.")
 	}
 
 	if glutenProteinContent == 0.0 {
@@ -73,7 +75,9 @@ func verifyInput(flourProteinContent, glutenProteinContent, targetProteinContent
 		msgs = append(msgs, "'targetFlourWeight' can't be less than 0.")
 	}
 
-	msgs = append(msgs, "Check --help for details")
+	if len(msgs) > 0 {
+		msgs = append(msgs, "Check --help for details")
+	}
 
 	return msgs
 
